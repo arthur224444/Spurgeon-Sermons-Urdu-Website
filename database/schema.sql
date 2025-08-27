@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS Sermons (
   original_language_id INTEGER NOT NULL,
   title TEXT NOT NULL,
   summary TEXT,
-  spurgeon_gems_number INTEGER NOT NULL,
+  spurgeon_gems_number INTEGER NOT NULL UNIQUE,
   FOREIGN KEY (preacher_id) REFERENCES ProjectContributors(id),
   FOREIGN KEY (location_id) REFERENCES PreachingLocations(id),
   FOREIGN KEY (original_language_id) REFERENCES Languages(id)
