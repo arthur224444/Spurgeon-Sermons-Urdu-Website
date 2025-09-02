@@ -9,7 +9,11 @@ database = Database()
 
 @app.get("/")
 def root():
-    return {"message": "Hello World"}
+    return {
+        "message": "Welcome to the Spurgeon Sermons database API",
+        "description": "A read-only API providing access to a database of Charles Spurgeon's sermons",
+        "version": "1.0",
+    }
 
 
 @app.get("/sermons")
