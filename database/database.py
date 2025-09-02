@@ -1,6 +1,6 @@
-import sqlite3
 import os
-from typing import Optional, List, Dict, Any
+import sqlite3
+from typing import Any, Dict, List, Optional
 
 
 class Database:
@@ -8,17 +8,17 @@ class Database:
         """Set the database path"""
         if db_path is None:
             # Default to database.db in the same directory as this file
-            self.db_path = os.path.join(os.path.dirname(__file__), 'database.db')
+            self.db_path = os.path.join(os.path.dirname(__file__), "database.db")
         else:
             self.db_path = db_path
-    
+
     def _get_connection(self) -> sqlite3.Connection:
         """Get a database connection with row factory for dict-like access"""
         conn = sqlite3.connect(self.db_path)
         conn.execute("PRAGMA foreign_keys = ON")
         conn.row_factory = sqlite3.Row
         return conn
-    
+
     def search_sermons(self, text: str) -> List[int]:
         """
         Search for sermons based on various criteria
@@ -41,7 +41,9 @@ class Database:
             results = [row[0] for row in rows]
         return results
 
-    def get_sermon_basic_details(self, spurgeon_gems_number: int) -> Optional[Dict[str, Any]]:
+    def get_sermon_basic_details(
+        self, spurgeon_gems_number: int
+    ) -> Optional[Dict[str, Any]]:
         """
         Get basic details for a specific sermon
         """
@@ -66,8 +68,9 @@ class Database:
             details = dict(row)
         return details
 
-
-    def get_sermon_full_details(self, spurgeon_gems_number: int) -> Optional[Dict[str, Any]]:
+    def get_sermon_full_details(
+        self, spurgeon_gems_number: int
+    ) -> Optional[Dict[str, Any]]:
         """
         Get complete details for a specific sermon by ID
         Returns a dictionary with all sermon information including related data
@@ -90,7 +93,7 @@ class Database:
             JOIN PreachingLocations pl ON s.location_id = pl.id
             WHERE s.spurgeon_gems_number = ?
         """
-        
+
         translations_table_query = """
             SELECT 
                 t.id as translation_id,
@@ -111,31 +114,31 @@ class Database:
             JOIN Languages l ON a.language_id = l.id
             WHERE a.sermon_id = ?
         """
-    
+
         with self._get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute(sermons_table_query, (spurgeon_gems_number,))
             row = cursor.fetchone()
-                
+
             if not row:
                 return None
-                
+
             # Convert to dictionary
             sermon_details = dict(row)
 
-            sermon_id = sermon_details['id']
+            sermon_id = sermon_details["id"]
             print(f"sermon_id: {sermon_id}, sermon_id_type: {type(sermon_id)}")
-                
+
             # Get translation information
             cursor.execute(translations_table_query, (sermon_id,))
             translations = [dict(row) for row in cursor.fetchall()]
-            sermon_details['translations'] = translations
-                
-            # Get audio information    
+            sermon_details["translations"] = translations
+
+            # Get audio information
             cursor.execute(audio_table_query, (sermon_id,))
             audio_records = [dict(row) for row in cursor.fetchall()]
-            sermon_details['audio_records'] = audio_records
-                
+            sermon_details["audio_records"] = audio_records
+
         return sermon_details
 
 
@@ -145,5 +148,9 @@ if __name__ == "__main__":
     spurgeon_gems_sermon_numbers = database.search_sermons("comforter")
     for spurgeon_gems_sermon_number in spurgeon_gems_sermon_numbers:
         print(f"Sermon number: {spurgeon_gems_sermon_number}")
-        print(f"Basic details: {database.get_sermon_basic_details(spurgeon_gems_sermon_number)}")
-        print(f"Full details: {database.get_sermon_full_details(spurgeon_gems_sermon_number)}")
+        print(
+            f"Basic details: {database.get_sermon_basic_details(spurgeon_gems_sermon_number)}"
+        )
+        print(
+            f"Full details: {database.get_sermon_full_details(spurgeon_gems_sermon_number)}"
+        )

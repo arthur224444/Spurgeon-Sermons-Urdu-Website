@@ -1,8 +1,12 @@
 from django.db import models
+from django.urls import reverse
 from django.utils import timezone
 
 
 class Sermon(models.Model):
+    id = models.BigAutoField(
+        auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
+    )
     title = models.CharField(max_length=200)
     preacher = models.CharField(max_length=100, default="Charles H. Spurgeon")
     content = models.TextField()
@@ -19,6 +23,4 @@ class Sermon(models.Model):
         return f"{self.title} - {self.preacher}"
 
     def get_absolute_url(self):
-        from django.urls import reverse
-
         return reverse("sermon_detail", args=[str(self.id)])
