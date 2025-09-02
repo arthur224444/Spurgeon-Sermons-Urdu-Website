@@ -21,5 +21,8 @@ python -m pip install --upgrade pip
 echo Installing required packages from requirements.txt...
 python -m pip install -r requirements.txt
 
+echo Setting up pre-commit hooks...
+pre-commit install
+
 echo Virtual environment setup complete!
 echo To activate the environment manually, run: %VENV_NAME%\Scripts\activate.bat or call activate_venv.bat
