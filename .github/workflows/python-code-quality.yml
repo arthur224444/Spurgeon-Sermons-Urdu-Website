@@ -9,58 +9,50 @@ on:
 jobs:
   code-quality:
     runs-on: ubuntu-latest
-    
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.12'
-    
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pylint
-        pip install -r requirements.txt
-    
-    - name: Run Pylint
-      run: |
-        echo "Running Pylint"
-        
-        # Run pylint on the current directory recursively
-        # This is the simplest approach that should work
-        pylint . --recursive=y --exit-zero > pylint_report.txt 2>&1 || true
-        
-        # Show what we got
-        echo "=== Pylint Report (last 30 lines) ==="
-        tail -30 pylint_report.txt
-        
-        # Extract the score - the format is usually "Your code has been rated at X.XX/10"
-        if grep -q "Your code has been rated at" pylint_report.txt; then
-          score=$(grep "Your code has been rated at" pylint_report.txt | sed -n 's/.*rated at \([0-9.-]*\)\/10.*/\1/p')
-          echo "Extracted score: $score"
-        else
-          echo "Could not find rating in pylint output"
-          echo "Full report content:"
-          cat pylint_report.txt
-          score="0.0"
-        fi
-        
-        echo "Pylint Score: $score"
-        echo "PYLINT_SCORE=$score" >> $GITHUB_ENV
-        
-        # Check if score is below threshold
-        if (( $(echo "$score < 9.0" | bc -l) )); then
-          echo "❌ Code quality score ($score) is below the required threshold of 9.0"
-          exit 1
-        else
-          echo "✅ Code quality score ($score) meets the required threshold"
-        fi
-    
-    - name: Upload Pylint report
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: pylint-report
-        path: pylint_report.txt
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pylint
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+
+      - name: Run Pylint and enforce threshold
+        env:
+          THRESHOLD: "9.0"
+        run: |
+          set -eo pipefail
+          echo "Running Pylint"
+          # Lint only your src (adjust paths as needed)
+          pylint . --exit-zero > pylint_report.txt
+
+          python - <<'PY'
+          import os, re, sys, pathlib
+          txt = pathlib.Path("pylint_report.txt").read_text(errors="ignore")
+          matches = re.findall(r"Your code has been rated at ([0-9.\-]+)/10", txt)
+          if not matches:
+              print("Could not find a Pylint score in the output.")
+              print(txt)
+              sys.exit(1)
+          score = float(matches[-1])  # take the last (global) score
+          threshold = float(os.environ.get("THRESHOLD", "9.0"))
+          print(f"Pylint Score: {score} (threshold {threshold})")
+          if score < threshold:
+              print(f"❌ Code quality score ({score}) is below {threshold}")
+              sys.exit(1)
+          print("✅ Code quality score meets the required threshold")
+          PY
+
+      - name: Upload Pylint report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: pylint-report
+          path: pylint_report.txt
