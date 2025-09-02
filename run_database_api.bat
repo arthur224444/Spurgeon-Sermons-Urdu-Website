@@ -1,0 +1,1 @@
+uvicorn database.database_api:app --reload
