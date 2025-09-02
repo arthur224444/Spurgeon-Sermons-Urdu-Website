@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spurgeon Sermons - Urdu</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+        .search-box {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .search-box input[type="text"] {
+            padding: 12px 20px;
+            font-size: 16px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            width: 300px;
+            outline: none;
+        }
+        .search-box input[type="submit"] {
+            padding: 12px 25px;
+            font-size: 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        .search-box input[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+        .sermon-item {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #fafafa;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .sermon-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .sermon-title {
+            color: #2c3e50;
+            font-size: 1.4em;
+            margin-bottom: 10px;
+            text-decoration: none;
+        }
+        .sermon-title:hover {
+            color: #3498db;
+        }
+        .sermon-meta {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        .sermon-excerpt {
+            color: #34495e;
+            line-height: 1.6;
+        }
+        .pagination {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .pagination a, .pagination span {
+            display: inline-block;
+            padding: 10px 15px;
+            margin: 0 5px;
+            text-decoration: none;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            color: #3498db;
+        }
+        .pagination .current {
+            background-color: #3498db;
+            color: white;
+            border-color: #3498db;
+        }
+        .pagination a:hover {
+            background-color: #f8f9fa;
+        }
+        .no-sermons {
+            text-align: center;
+            color: #7f8c8d;
+            font-style: italic;
+            padding: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Spurgeon Sermons - اردو</h1>
+        
+        <div class="search-box">
+            <form method="get" action="{% url 'sermons:sermon_search' %}">
+                <input type="text" name="q" placeholder="Search sermons..." value="{{ request.GET.q }}">
+                <input type="submit" value="Search">
+            </form>
+        </div>
+
+        {% if sermons %}
+            {% for sermon in sermons %}
+                <div class="sermon-item">
+                    <a href="{% url 'sermons:sermon_detail' sermon.pk %}" class="sermon-title">
+                        {{ sermon.title }}
+                    </a>
+                    <div class="sermon-meta">
+                        <strong>Preacher:</strong> {{ sermon.preacher }} | 
+                        <strong>Date:</strong> {{ sermon.date_preached|date:"F j, Y" }}
+                        {% if sermon.scripture_reference %}
+                            | <strong>Scripture:</strong> {{ sermon.scripture_reference }}
+                        {% endif %}
+                    </div>
+                    <div class="sermon-excerpt">
+                        {{ sermon.content|truncatewords:50 }}
+                    </div>
+                </div>
+            {% endfor %}
+
+            {% if is_paginated %}
+                <div class="pagination">
+                    {% if page_obj.has_previous %}
+                        <a href="?page=1">&laquo; First</a>
+                        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                    {% endif %}
+
+                    <span class="current">
+                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                    </span>
+
+                    {% if page_obj.has_next %}
+                        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+                        <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% else %}
+            <div class="no-sermons">
+                <h3>No sermons found</h3>
+                <p>There are currently no sermons available. Please check back later.</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
