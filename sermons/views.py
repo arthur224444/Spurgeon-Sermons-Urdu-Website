@@ -31,6 +31,13 @@ class SermonDetailView(DetailView):
             sermon_id = self.kwargs.get("pk")
             return self._fetch_and_create_sermon(sermon_id)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        # Check if user came from search results
+        context["from_search"] = self.request.GET.get("from_search", False)
+        context["search_query"] = self.request.GET.get("q", "")
+        return context
+
     def _fetch_and_create_sermon(self, sermon_id):
         """Fetch sermon from API and create a temporary Sermon object for display"""
         data_conn = DataConnection()

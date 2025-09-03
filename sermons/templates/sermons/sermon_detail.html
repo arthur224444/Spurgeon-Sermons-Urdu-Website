@@ -102,7 +102,11 @@
 <body>
     <div class="container">
         <div class="back-link">
-            <a href="{% url 'sermons:sermon_list' %}">&larr; Back to Sermon List</a>
+            {% if from_search and search_query %}
+                <a href="{% url 'sermons:sermon_search' %}?q={{ search_query|urlencode }}">&larr; Back to Search Results</a>
+            {% else %}
+                <a href="{% url 'sermons:sermon_list' %}">&larr; Back to Sermon List</a>
+            {% endif %}
         </div>
 
         <h1>{{ sermon.title }}</h1>
@@ -141,8 +145,13 @@
         </div>
 
         <div class="navigation">
-            <a href="{% url 'sermons:sermon_list' %}" class="nav-button secondary">All Sermons</a>
-            <a href="{% url 'sermons:sermon_search' %}" class="nav-button">Search Sermons</a>
+            {% if from_search and search_query %}
+                <a href="{% url 'sermons:sermon_search' %}?q={{ search_query|urlencode }}" class="nav-button secondary">Back to Search Results</a>
+                <a href="{% url 'sermons:sermon_list' %}" class="nav-button">All Sermons</a>
+            {% else %}
+                <a href="{% url 'sermons:sermon_list' %}" class="nav-button secondary">All Sermons</a>
+                <a href="{% url 'sermons:sermon_search' %}" class="nav-button">Search Sermons</a>
+            {% endif %}
         </div>
     </div>
 </body>

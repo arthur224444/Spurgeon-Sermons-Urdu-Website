@@ -137,7 +137,7 @@
                 {% if sermons %}
                     {% for sermon in sermons %}
                         <div class="sermon-item">
-                            <a href="{% url 'sermons:sermon_detail' sermon.pk %}" class="sermon-title">
+                            <a href="{% url 'sermons:sermon_detail' sermon.pk %}?from_search=1&q={{ query|urlencode }}" class="sermon-title">
                                 {{ sermon.title }}
                             </a>
                             <div class="sermon-meta">
