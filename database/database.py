@@ -141,6 +141,18 @@ class Database:
 
         return sermon_details
 
+    def get_all_sermons_numbers(self) -> List[int]:
+        """
+        Obtain all the Spurgeon Gems sermon numbers
+        """
+        results = []
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT spurgeon_gems_number FROM Sermons")
+            rows = cursor.fetchall()
+            results = [row[0] for row in rows]
+        return results
+
 
 # Demonstration code
 if __name__ == "__main__":

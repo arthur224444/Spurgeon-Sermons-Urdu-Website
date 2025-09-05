@@ -24,6 +24,27 @@ class DataConnection:
             logger.error(f"API request failed for {endpoint}: {e}")
             return None
 
+    def get_all_sermons_numbers(self) -> List[int]:
+        """Get all Spurgeon Gems sermon numbers"""
+        data = self._make_request(f"/sermons/all")
+        return data["spurgeon_gems_sermon_numbers"]
+
+    def get_sermons_list_page_number(
+        self, page_number: int, page_size: int
+    ) -> List[int]:
+        """Get all Spurgeon Gems sermon numbers for a given page number"""
+        all_sermons = self.get_all_sermons_numbers()
+        start_index = (page_number - 1) * page_size
+        end_index = start_index + page_size
+        sermon_numbers = all_sermons[start_index:end_index]
+
+        sermons = []
+        for sermon_number in sermon_numbers:
+            sermon_data = self.get_sermon_basic_details(sermon_number)
+            if sermon_data:
+                sermons.append(sermon_data)
+        return sermons
+
     def search_sermons(self, query: str) -> List[int]:
         """Search for sermons and return sermon numbers"""
         data = self._make_request(f"/sermons?query={query}")

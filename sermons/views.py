@@ -1,8 +1,9 @@
+from django.core.paginator import EmptyPage, Page, PageNotAnInteger, Paginator
 from django.db import models
 from django.http import Http404
 from django.shortcuts import render
 from django.utils import timezone
-from django.views.generic import DetailView, ListView
+from django.views.generic import DetailView, View
 
 from .data_connection import DataConnection
 from .models import Sermon
@@ -10,11 +11,49 @@ from .models import Sermon
 # Create your views here.
 
 
-class SermonListView(ListView):
-    model = Sermon
+class SermonListView(View):
+    # model = Sermon
     template_name = "sermons/sermon_list.html"
-    context_object_name = "sermons"
+    # context_object_name = "sermons"
     paginate_by = 10
+
+    def get(self, request, *args, **kwargs):
+        data_conn = (
+            DataConnection()
+        )  # TODO: Better to make this a module level singleton
+
+        q = (request.GET.get("q") or "").strip()
+        page_number_raw = request.GET.get("page", 1)
+
+        try:
+            page_number = int(page_number_raw)
+            if page_number < 1:
+                raise ValueError
+        except ValueError:
+            page_number = 1
+
+        all_sermon_numbers = data_conn.get_all_sermons_numbers()
+        sermons = data_conn.get_sermons_list_page_number(page_number, self.paginate_by)
+        paginator = Paginator(range(len(all_sermon_numbers)), self.paginate_by)
+        try:
+            page = paginator.page(page_number)
+        except (EmptyPage, PageNotAnInteger):
+            # If page is out of range, show last page
+            last_page = paginator.num_pages
+            page = paginator.page(last_page)
+            sermons = data_conn.get_sermons_list_page_number(
+                last_page, self.paginate_by
+            )
+
+        context = {
+            "sermons": sermons,
+            "page_obj": page,
+            "is_paginated": paginator.num_pages > 1,
+            "paginator": paginator,
+            "q": q,
+        }
+
+        return render(request, self.template_name, context)
 
 
 class SermonDetailView(DetailView):

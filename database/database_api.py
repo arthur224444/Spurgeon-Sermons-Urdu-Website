@@ -16,6 +16,11 @@ def root():
     }
 
 
+@app.get("/sermons/all")
+def get_all_sermons_numbers():
+    return {"spurgeon_gems_sermon_numbers": database.get_all_sermons_numbers()}
+
+
 @app.get("/sermons")
 def search_sermons(query: str):
     spurgeon_gems_sermon_numbers = database.search_sermons(query)
