@@ -129,10 +129,10 @@
                         {{ sermon.title }}
                     </a>
                     <div class="sermon-meta">
-                        <strong>Preacher:</strong> {{ sermon.preacher }} | 
-                        <strong>Date:</strong> {{ sermon.date_preached|date:"F j, Y" }}
-                        {% if sermon.scripture_reference %}
-                            | <strong>Scripture:</strong> {{ sermon.scripture_reference }}
+                        <strong>Bible Passage:</strong> {{ sermon.bible_passage }} | 
+                        <strong>Sermon Number:</strong> {{ sermon.spurgeon_gems_number }} | 
+                        {% if sermon.summary %}
+                            <strong>Summary:</strong> {{ sermon.summary }}
                         {% endif %}
                     </div>
                     <div class="sermon-excerpt">

@@ -42,6 +42,10 @@ class DataConnection:
         for sermon_number in sermon_numbers:
             sermon_data = self.get_sermon_basic_details(sermon_number)
             if sermon_data:
+                # Add pk field for template URL generation
+                sermon_data["pk"] = sermon_data.get(
+                    "spurgeon_gems_number", sermon_number
+                )
                 sermons.append(sermon_data)
         return sermons
 
