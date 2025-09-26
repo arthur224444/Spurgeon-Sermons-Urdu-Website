@@ -3,23 +3,26 @@ PRAGMA foreign_keys = ON;
 -- Reference tables first
 CREATE TABLE IF NOT EXISTS PreachingLocations (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  location_name TEXT NOT NULL UNIQUE
+  location_name_english TEXT NOT NULL UNIQUE,
+  location_name_urdu TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS Denominations (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  denomination_name TEXT NOT NULL UNIQUE
+  denomination_name_english TEXT NOT NULL UNIQUE,
+  denomination_name_urdu TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS Languages (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  language_name TEXT NOT NULL UNIQUE
+  language_name_english TEXT NOT NULL UNIQUE,
+  language_name_urdu TEXT NOT NULL UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS TextFileFormats (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   format_name TEXT NOT NULL UNIQUE
-);
+); 
 
 CREATE TABLE IF NOT EXISTS AudioFileFormats (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -34,8 +37,10 @@ CREATE TABLE IF NOT EXISTS ReviewTypes (
 CREATE TABLE IF NOT EXISTS ProjectContributors (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   human_bool INTEGER NOT NULL CHECK (human_bool IN (0, 1)),
-  first_name TEXT NOT NULL,
-  last_name TEXT NOT NULL,
+  first_name_english TEXT NOT NULL,
+  first_name_urdu TEXT NOT NULL,
+  last_name_english TEXT NOT NULL,
+  last_name_urdu TEXT NOT NULL,
   denomination_id INTEGER NOT NULL,
   FOREIGN KEY (denomination_id) REFERENCES Denominations(id)
 );
@@ -44,12 +49,15 @@ CREATE TABLE IF NOT EXISTS ProjectContributors (
 CREATE TABLE IF NOT EXISTS Sermons (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   preacher_id INTEGER NOT NULL,
-  bible_passage TEXT NOT NULL,
+  bible_passage_english TEXT NOT NULL,
+  bible_passage_urdu TEXT NOT NULL,
   location_id INTEGER NOT NULL,
   date_delivered TEXT NOT NULL,              -- ISO 8601 date
   original_language_id INTEGER NOT NULL,
-  title TEXT NOT NULL,
-  summary TEXT,
+  title_english TEXT NOT NULL,
+  title_urdu TEXT NOT NULL,
+  summary_english TEXT,
+  summary_urdu TEXT,
   spurgeon_gems_number INTEGER NOT NULL UNIQUE,
   FOREIGN KEY (preacher_id) REFERENCES ProjectContributors(id),
   FOREIGN KEY (location_id) REFERENCES PreachingLocations(id),
