@@ -36,7 +36,7 @@ INSERT OR IGNORE INTO Sermons (
 VALUES (
   (SELECT id FROM ProjectContributors WHERE first_name_english = 'Charles' AND last_name_english = 'Spurgeon'),
   'Malachi 3:6',
-  'مالکی 3:6',
+  'ملاکی 3:6',
   (SELECT id FROM PreachingLocations WHERE location_name_english = 'Metropolitan Tabernacle'),
   '1855-01-07',
   (SELECT id FROM Languages WHERE language_name_english = 'English'),
