@@ -7,8 +7,8 @@ class Sermon(models.Model):
     id = models.BigAutoField(
         auto_created=True, primary_key=True, serialize=False, verbose_name="ID"
     )
-    title_english = models.CharField(max_length=200)
-    title_urdu = models.CharField(max_length=200)
+    title_english = models.CharField(max_length=200, default="Untitled Sermon")
+    title_urdu = models.CharField(max_length=200, default="Untitled Sermon")
     preacher_name_english = models.CharField(
         max_length=100, default="Charles H. Spurgeon"
     )
@@ -25,7 +25,7 @@ class Sermon(models.Model):
         ordering = ["-date_preached"]
 
     def __str__(self):
-        return f"{self.title} - {self.preacher}"
+        return f"{self.title_english} - {self.preacher_name_english}"
 
     def get_absolute_url(self):
         return reverse("sermon_detail", args=[str(self.id)])

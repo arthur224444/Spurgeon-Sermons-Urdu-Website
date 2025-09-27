@@ -1,5 +1,6 @@
 from django.core.paginator import EmptyPage, Page, PageNotAnInteger, Paginator
-from django.db import models
+from django.db import DatabaseError, models
+from django.db.utils import OperationalError
 from django.http import Http404
 from django.shortcuts import render
 from django.utils import timezone
@@ -65,7 +66,7 @@ class SermonDetailView(DetailView):
         # Try to get from Django DB first
         try:
             return super().get_object(queryset)
-        except Http404:
+        except (Http404, DatabaseError, OperationalError):
             # If not in Django DB, try to fetch from API and create
             sermon_id = self.kwargs.get("pk")
             return self._fetch_and_create_sermon(sermon_id)
@@ -131,12 +132,6 @@ def sermon_search(request):
                 # map API id to what the template expects
                 sermon_data["pk"] = sermon_data["spurgeon_gems_number"]
                 sermons.append(sermon_data)
-
-    # (optional) don't overwrite the file each loop
-    if sermons:
-        with open("test3.txt", "w") as f:
-            for s in sermons:
-                f.write(str(s) + "\n")
 
     return render(
         request, "sermons/sermon_search.html", {"sermons": sermons, "query": query}
