@@ -9,9 +9,10 @@ logger = logging.getLogger(__name__)
 
 class DataConnection:
     def __init__(self, base_url: str = None):
-        self.base_url = base_url or getattr(
-            settings, "DATABASE_API_URL", "http://localhost:8001"
-        )
+        # self.base_url = base_url or getattr(
+        #    settings, "DATABASE_API_URL", "http://localhost:8001"
+        # )
+        self.base_url = "http://localhost:8001"
 
     def _make_request(self, endpoint: str) -> Optional[Dict]:
         """Make HTTP request to database API"""

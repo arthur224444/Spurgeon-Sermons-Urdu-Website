@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ sermon.title }} - Spurgeon Sermons</title>
+    <title>{{ sermon.title_urdu }} - Spurgeon Sermons</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -109,21 +109,21 @@
             {% endif %}
         </div>
 
-        <h1>{{ sermon.title }}</h1>
+        <h1>{{ sermon.title_urdu }} - {{ sermon.title_english }}</h1>
 
         <div class="sermon-meta">
             <div class="meta-item">
                 <span class="meta-label">Preacher:</span>
-                <span class="meta-value">{{ sermon.preacher }}</span>
+                <span class="meta-value">{{ sermon.preacher_name_urdu }}</span>
             </div>
             <div class="meta-item">
                 <span class="meta-label">Date Preached:</span>
                 <span class="meta-value">{{ sermon.date_preached|date:"F j, Y" }}</span>
             </div>
-            {% if sermon.scripture_reference %}
+            {% if sermon.bible_passage_english %}
             <div class="meta-item">
                 <span class="meta-label">Scripture:</span>
-                <span class="meta-value">{{ sermon.scripture_reference }}</span>
+                <span class="meta-value">{{ sermon.bible_passage_urdu }} - {{ sermon.bible_passage_english }}</span>
             </div>
             {% endif %}
             {% if sermon.sermon_number %}
@@ -133,12 +133,6 @@
             </div>
             {% endif %}
         </div>
-
-        {% if sermon.scripture_reference %}
-        <div class="scripture-highlight">
-            <strong>Scripture Reference:</strong> {{ sermon.scripture_reference }}
-        </div>
-        {% endif %}
 
         <div class="sermon-content">
             {{ sermon.content|linebreaks }}

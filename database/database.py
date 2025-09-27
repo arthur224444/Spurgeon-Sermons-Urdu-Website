@@ -31,9 +31,12 @@ class Database:
             query = """
                 SELECT DISTINCT spurgeon_gems_number
                 FROM Sermons
-                WHERE title      LIKE '%' || :q || '%' COLLATE NOCASE
-                OR summary       LIKE '%' || :q || '%' COLLATE NOCASE
-                OR bible_passage LIKE '%' || :q || '%' COLLATE NOCASE
+                WHERE title_english      LIKE '%' || :q || '%' COLLATE NOCASE
+                OR title_urdu            LIKE '%' || :q || '%' COLLATE NOCASE
+                OR summary_english       LIKE '%' || :q || '%' COLLATE NOCASE
+                OR summary_urdu          LIKE '%' || :q || '%' COLLATE NOCASE
+                OR bible_passage_english LIKE '%' || :q || '%' COLLATE NOCASE
+                OR bible_passage_urdu    LIKE '%' || :q || '%' COLLATE NOCASE
             """
 
             cursor.execute(query, {"q": text})
@@ -55,9 +58,12 @@ class Database:
             cursor = conn.cursor()
             query = """
                 SELECT 
-                    title,
-                    summary,
-                    bible_passage,
+                    title_english,
+                    title_urdu,
+                    summary_english,
+                    summary_urdu,
+                    bible_passage_english,
+                    bible_passage_urdu,
                     date_delivered,
                     spurgeon_gems_number
                 FROM Sermons
@@ -79,14 +85,20 @@ class Database:
         sermons_table_query = """
             SELECT 
                 s.id,
-                s.title,
-                s.summary,
-                s.bible_passage,
+                s.title_english,
+                s.title_urdu,
+                s.summary_english,
+                s.summary_urdu,
+                s.bible_passage_english,
+                s.bible_passage_urdu,
                 s.date_delivered,
                 s.spurgeon_gems_number,
-                pc.first_name || ' ' || pc.last_name as preacher_name,
-                d.denomination_name,
-                pl.location_name as preaching_location
+                pc.first_name_english || ' ' || pc.last_name_english as preacher_name_english,
+                pc.first_name_urdu || ' ' || pc.last_name_urdu as preacher_name_urdu,
+                d.denomination_name_english,
+                d.denomination_name_urdu,
+                pl.location_name_english as preaching_location_english,
+                pl.location_name_urdu as preaching_location_urdu
             FROM Sermons s
             JOIN ProjectContributors pc ON s.preacher_id = pc.id
             JOIN Denominations d ON pc.denomination_id = d.id
@@ -98,7 +110,8 @@ class Database:
             SELECT 
                 t.id as translation_id,
                 t.date_translated,
-                l.language_name as translation_language
+                l.language_name_english as translation_language_english,
+                l.language_name_urdu as translation_language_urdu
             FROM Translations t
             JOIN Languages l ON t.language_id = l.id
             WHERE t.sermon_id = ?
@@ -109,7 +122,8 @@ class Database:
                 a.id as audio_id,
                 a.date_recorded,
                 a.duration_seconds,
-                l.language_name as audio_language
+                l.language_name_english as audio_language_english,
+                l.language_name_urdu as audio_language_urdu
             FROM Audio a 
             JOIN Languages l ON a.language_id = l.id
             WHERE a.sermon_id = ?

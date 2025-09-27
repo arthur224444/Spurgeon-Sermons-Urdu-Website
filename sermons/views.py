@@ -89,10 +89,15 @@ class SermonDetailView(DetailView):
         # This doesn't save to database, just creates an object for the template
         sermon = Sermon(
             id=sermon_id,
-            title=sermon_data.get("title", "Untitled Sermon"),
-            preacher=sermon_data.get("preacher", "Charles H. Spurgeon"),
+            title_english=sermon_data.get("title_english", "Untitled Sermon"),
+            title_urdu=sermon_data.get("title_urdu", "Untitled Sermon"),
+            preacher_name_english=sermon_data.get(
+                "preacher_name_english", "Charles H. Spurgeon"
+            ),
+            preacher_name_urdu=sermon_data.get("preacher_name_urdu", "چارلس سپرژن"),
+            bible_passage_english=sermon_data.get("bible_passage_english", ""),
+            bible_passage_urdu=sermon_data.get("bible_passage_urdu", ""),
             content=sermon_data.get("content", ""),
-            scripture_reference=sermon_data.get("bible_passage", ""),
             sermon_number=sermon_data.get("spurgeon_gems_number", sermon_id),
         )
 

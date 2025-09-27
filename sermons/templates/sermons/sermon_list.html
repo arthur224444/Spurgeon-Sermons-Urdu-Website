@@ -126,13 +126,13 @@
             {% for sermon in sermons %}
                 <div class="sermon-item">
                     <a href="{% url 'sermons:sermon_detail' sermon.pk %}" class="sermon-title">
-                        {{ sermon.title }}
+                        {{ sermon.title_urdu }} - {{ sermon.title_english }}
                     </a>
                     <div class="sermon-meta">
-                        <strong>Bible Passage:</strong> {{ sermon.bible_passage }} | 
+                        <strong>Bible Passage:</strong> {{ sermon.bible_passage_urdu }} - {{ sermon.bible_passage_english }} | 
                         <strong>Sermon Number:</strong> {{ sermon.spurgeon_gems_number }} | 
-                        {% if sermon.summary %}
-                            <strong>Summary:</strong> {{ sermon.summary }}
+                        {% if sermon.summary_urdu %}
+                            <strong>Summary:</strong> {{ sermon.summary_urdu }}
                         {% endif %}
                     </div>
                     <div class="sermon-excerpt">
