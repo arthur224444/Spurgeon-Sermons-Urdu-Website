@@ -1,171 +1,260 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ur" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Search Sermons - Spurgeon Sermons</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #2c3e50;
-            text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 3px solid #3498db;
-            padding-bottom: 15px;
-        }
-        .search-box {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .search-box input[type="text"] {
-            padding: 12px 20px;
-            font-size: 16px;
-            border: 2px solid #ddd;
-            border-radius: 25px;
-            width: 400px;
-            outline: none;
-        }
-        .search-box input[type="submit"] {
-            padding: 12px 25px;
-            font-size: 16px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            margin-left: 10px;
-        }
-        .search-box input[type="submit"]:hover {
-            background-color: #2980b9;
-        }
-        .search-results {
-            margin-top: 30px;
-        }
-        .results-header {
-            margin-bottom: 20px;
-            padding: 15px;
-            background: #e8f4fd;
-            border-radius: 8px;
-            border-left: 4px solid #3498db;
-        }
-        .sermon-item {
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            background: #fafafa;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .sermon-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        .sermon-title {
-            color: #2c3e50;
-            font-size: 1.4em;
-            margin-bottom: 10px;
-            text-decoration: none;
-        }
-        .sermon-title:hover {
-            color: #3498db;
-        }
-        .sermon-meta {
-            color: #7f8c8d;
-            font-size: 0.9em;
-            margin-bottom: 10px;
-        }
-        .sermon-excerpt {
-            color: #34495e;
-            line-height: 1.6;
-        }
-        .no-results {
-            text-align: center;
-            color: #7f8c8d;
-            font-style: italic;
-            padding: 40px;
-        }
-        .back-link {
-            text-align: center;
-            margin-top: 30px;
-        }
-        .back-link a {
-            display: inline-block;
-            padding: 12px 25px;
-            background-color: #95a5a6;
-            color: white;
-            text-decoration: none;
-            border-radius: 25px;
-            transition: background-color 0.2s;
-        }
-        .back-link a:hover {
-            background-color: #7f8c8d;
-        }
-        .highlight {
-            background-color: #fff3cd;
-            padding: 2px 4px;
-            border-radius: 3px;
-        }
-    </style>
+  {% load static %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Search Sermons - Spurgeon Sermons</title>
+  <link rel="icon" href="{% static 'logo.png' %}">
+  <link rel="apple-touch-icon" href="{% static 'logo.png' %}">
+  <meta property="og:image" content="{% static 'logo.png' %}">
+  <meta name="twitter:image" content="{% static 'logo.png' %}">
+
+  <!-- Urdu-friendly fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Noto+Sans+Arabic:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* —— Theme tokens —— */
+    :root{
+      --surface: #ffffff;
+      --surface-2: #f6f7f9;
+      --text: #0f172a;
+      --muted: #6b7280;
+      --primary: #0f766e;
+      --primary-ink: #ffffff;
+      --border: #e5e7eb;
+      --ring-rgb: 15,118,110;
+      --radius: 18px;
+      --shadow: 0 10px 30px rgba(15, 23, 42, .07);
+    }
+    @media (prefers-color-scheme: dark){
+      :root{
+        --surface: #0f1216;
+        --surface-2: #0d1014;
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+        --primary: #22c55e;
+        --primary-ink: #051006;
+        --border: #1f2937;
+        --shadow: 0 10px 30px rgba(0,0,0,.35);
+      }
+    }
+
+    html, body { height: 100%; }
+    body{
+      margin: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-family: 'Noto Nastaliq Urdu','Noto Sans Arabic', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1100px 520px at 50% -20%, rgba(34,197,94,.08), transparent 70%),
+        linear-gradient(to bottom, var(--surface-2), #eef2f7 35%, #f9fafb 100%);
+      background-color: var(--surface-2);
+      padding: 0 0 40px;
+    }
+
+    /* Top bar */
+    .topbar{
+      position: sticky; top:0; z-index:10;
+      backdrop-filter: blur(10px);
+      background: color-mix(in oklab, var(--surface), transparent 18%);
+      border-bottom: 1px solid color-mix(in oklab, var(--border), transparent 30%);
+    }
+    .topbar-inner{
+      max-width: 1200px; margin: 0 auto; padding: 12px 16px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px; font-weight:700; font-size:18px;
+    }
+    .brand-badge{
+      width:36px; height:36px; display:grid; place-items:center;
+      background: color-mix(in oklab, var(--primary), transparent 85%);
+      border-radius: 12px; box-shadow: var(--shadow);
+    }
+
+    /* Page container */
+    .container{
+      max-width: 1200px;
+      margin: 18px auto 0;
+      background: var(--surface);
+      padding: 24px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    /* Heading */
+    h1{
+      margin: 0 0 16px;
+      text-align: center;
+      font-size: clamp(24px, 4vw, 36px);
+      font-weight: 700;
+      line-height: 1.55;
+    }
+    .sublead{ color: var(--muted); text-align:center; margin-bottom: 14px; }
+
+    /* Search */
+    .search-box{
+      margin: 12px auto 12px;
+      padding: 14px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      max-width: 820px;
+    }
+    .search-row{ display:flex; gap:10px; align-items:center; }
+    .search-box input[type="text"]{
+      flex:1; font-size: 16px; padding: 12px 14px;
+      border: 1px solid var(--border); border-radius: 12px; outline: none;
+      background: var(--surface-2); color: var(--text);
+      transition: box-shadow .2s ease, border-color .2s ease;
+    }
+    .search-box input[type="text"]:focus{
+      border-color: rgb(var(--ring-rgb));
+      box-shadow: 0 0 0 4px rgba(var(--ring-rgb), .12);
+    }
+    .search-box input[type="submit"]{
+      all: unset;
+      padding: 12px 16px; border-radius: 12px; cursor:pointer;
+      background: var(--primary); color: var(--primary-ink);
+      border: 1px solid color-mix(in oklab, var(--primary), black 10%);
+      font-size: 14px;
+    }
+
+    /* Results area */
+    .search-results{ margin-top: 18px; }
+    .results-header{
+      margin-bottom: 14px; padding: 12px 14px;
+      background: color-mix(in oklab, var(--primary), transparent 92%);
+      border: 1px solid var(--border);
+      border-radius: 12px; color: var(--muted);
+    }
+
+    /* Sermon card */
+    .sermon-item{
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 16px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      transition: transform .12s ease;
+    }
+    .sermon-item:hover{ transform: translateY(-2px); }
+    .sermon-title{
+      display:inline-block; color: var(--text);
+      font-size: 20px; line-height:1.6; text-decoration:none; margin-bottom:6px;
+    }
+    .sermon-title:hover{
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-thickness: 1.25px;
+    }
+    .sermon-meta{
+      color: var(--muted); font-size: 14px; margin-bottom: 10px;
+      display:flex; flex-wrap:wrap; gap:6px 12px;
+    }
+    .sermon-meta strong{ color: inherit; font-weight: 600; }
+    .sermon-excerpt{
+      color: color-mix(in oklab, var(--text), #000 10%);
+      line-height: 1.9; font-size: 15px;
+    }
+
+    /* Empty state & highlight */
+    .no-results{
+      text-align:center; color: var(--muted);
+      background: var(--surface); border: 1px dashed var(--border);
+      border-radius: var(--radius); padding: 32px; margin-top: 12px;
+    }
+    .highlight{
+      background: color-mix(in oklab, #fff3cd, var(--surface) 20%);
+      padding: 2px 6px; border-radius: 6px;
+    }
+
+    /* Back link button */
+    .back-link{
+      text-align:center; margin-top: 22px;
+    }
+    .back-link a{
+      display:inline-block; text-decoration:none; cursor:pointer;
+      padding: 12px 18px; border-radius: 999px;
+      border: 1px solid var(--border); background: var(--surface);
+      color: var(--text); font-size: 14px;
+      transition: transform .06s ease, background .2s ease;
+    }
+    .back-link a:hover{ transform: translateY(-1px); background: var(--surface-2); }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Search Sermons - اردو</h1>
-        
-        <div class="search-box">
-            <form method="get">
-                <input type="text" name="q" placeholder="Search sermons by title, content, or scripture..." value="{{ query }}">
-                <input type="submit" value="Search">
-            </form>
-        </div>
 
-        {% if query %}
-            <div class="search-results">
-                {% if sermons %}
-                    {% for sermon in sermons %}
-                        <div class="sermon-item">
-                            <a href="{% url 'sermons:sermon_detail' sermon.pk %}?from_search=1&q={{ query|urlencode }}" class="sermon-title">
-                                {{ sermon.title_urdu }} - {{ sermon.title_english }}
-                            </a>
-                            <div class="sermon-meta">
-                                <strong>Bible Passage:</strong> {{ sermon.bible_passage_urdu }} - {{ sermon.bible_passage_english }} | 
-                                <strong>Sermon Number:</strong> {{ sermon.spurgeon_gems_number }} | 
-                                {% if sermon.summary_urdu %}
-                                    <strong>Summary:</strong> {{ sermon.summary_urdu }}
-                                {% endif %}
-                            </div>
-                            <div class="sermon-excerpt">
-                                {{ sermon.content|truncatewords:50 }}
-                            </div>
-                        </div>
-                    {% endfor %}
-                {% else %}
-                    <div class="no-results">
-                        <h3>No sermons found</h3>
-                        <p>No sermons match your search query "{{ query }}". Try different keywords or check the spelling.</p>
-                    </div>
-                {% endif %}
-            </div>
-        {% endif %}
-
-        <div class="back-link">
-            <a href="{% url 'sermons:sermon_list' %}">← Back to All Sermons</a>
-        </div>
+  <!-- Sticky top bar (visual only) -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="brand-badge"><img src="{% static 'logo.png' %}" alt="Logo" style="width:100%; height:100%; object-fit: contain; border-radius: 10px;" /></span>
+        <span>Spurgeon Sermons — تلاش</span>
+      </div>
+      <div class="back-link">
+        <a href="{% url 'sermons:sermon_list' %}">← تمام خطبات</a>
+      </div>
     </div>
+  </div>
+
+  <div class="container">
+    <h1>Search Sermons — اردو</h1>
+    <p class="sublead">عنوان، متن یا حوالہ کے ذریعے تلاش کریں</p>
+
+    <div class="search-box">
+      <div class="search-row">
+        <!-- same GET form and fields -->
+        <form method="get" style="display:flex; gap:10px; width:100%;">
+          <input type="text" name="q" placeholder="عنوان، متن یا حوالہ لکھیں…" value="{{ query }}">
+          <input type="submit" value="تلاش">
+        </form>
+      </div>
+    </div>
+
+    {% if query %}
+      <div class="search-results">
+        <div class="results-header">
+          تلاش: <span class="highlight">{{ query }}</span>
+        </div>
+
+        {% if sermons %}
+          {% for sermon in sermons %}
+            <div class="sermon-item">
+              <a href="{% url 'sermons:sermon_detail' sermon.pk %}?from_search=1&q={{ query|urlencode }}" class="sermon-title">
+                {{ sermon.title_urdu }} — {{ sermon.title_english }}
+              </a>
+              <div class="sermon-meta">
+                <span><strong>حوالہ:</strong> {{ sermon.bible_passage_urdu }} — {{ sermon.bible_passage_english }}</span>
+                <span><strong>سیرمن نمبر:</strong> {{ sermon.spurgeon_gems_number }}</span>
+                {% if sermon.summary_urdu %}
+                  <span><strong>خلاصہ:</strong> {{ sermon.summary_urdu }}</span>
+                {% endif %}
+              </div>
+              <div class="sermon-excerpt">
+                {{ sermon.content|truncatewords:50 }}
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          <div class="no-results">
+            <h3>کوئی خطبہ نہیں ملا</h3>
+            <p>آپ کی تلاش <span class="highlight">“{{ query }}”</span> سے کوئی نتیجہ نہیں ملا۔ براہِ کرم مختلف الفاظ آزمائیں۔</p>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <div class="back-link">
+      <a href="{% url 'sermons:sermon_list' %}">← واپس تمام خطبات</a>
+    </div>
+  </div>
 </body>
 </html>
-
-

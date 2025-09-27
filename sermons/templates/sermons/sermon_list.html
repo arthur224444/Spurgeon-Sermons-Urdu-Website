@@ -1,169 +1,328 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ur" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Spurgeon Sermons - Urdu</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        h1 {
-            color: #2c3e50;
-            text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 3px solid #3498db;
-            padding-bottom: 15px;
-        }
-        .search-box {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        .search-box input[type="text"] {
-            padding: 12px 20px;
-            font-size: 16px;
-            border: 2px solid #ddd;
-            border-radius: 25px;
-            width: 300px;
-            outline: none;
-        }
-        .search-box input[type="submit"] {
-            padding: 12px 25px;
-            font-size: 16px;
-            background-color: #3498db;
-            color: white;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            margin-left: 10px;
-        }
-        .search-box input[type="submit"]:hover {
-            background-color: #2980b9;
-        }
-        .sermon-item {
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            background: #fafafa;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .sermon-item:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        .sermon-title {
-            color: #2c3e50;
-            font-size: 1.4em;
-            margin-bottom: 10px;
-            text-decoration: none;
-        }
-        .sermon-title:hover {
-            color: #3498db;
-        }
-        .sermon-meta {
-            color: #7f8c8d;
-            font-size: 0.9em;
-            margin-bottom: 10px;
-        }
-        .sermon-excerpt {
-            color: #34495e;
-            line-height: 1.6;
-        }
-        .pagination {
-            text-align: center;
-            margin-top: 30px;
-        }
-        .pagination a, .pagination span {
-            display: inline-block;
-            padding: 10px 15px;
-            margin: 0 5px;
-            text-decoration: none;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            color: #3498db;
-        }
-        .pagination .current {
-            background-color: #3498db;
-            color: white;
-            border-color: #3498db;
-        }
-        .pagination a:hover {
-            background-color: #f8f9fa;
-        }
-        .no-sermons {
-            text-align: center;
-            color: #7f8c8d;
-            font-style: italic;
-            padding: 40px;
-        }
-    </style>
+  {% load static %}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Spurgeon Sermons - Urdu</title>
+
+  <link rel="icon" href="{% static 'logo.png' %}">
+  <link rel="apple-touch-icon" href="{% static 'logo.png' %}">
+  <meta property="og:image" content="{% static 'logo.png' %}">
+  <meta name="twitter:image" content="{% static 'logo.png' %}">
+
+  <!-- Urdu-friendly fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Noto+Sans+Arabic:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* —— Theme tokens —— */
+    :root{
+      --bg: #0b0c0f;                  /* page background (subtle gradient base) */
+      --surface: #ffffff;             /* card/page surface */
+      --surface-2: #f6f7f9;           /* soft surface */
+      --text: #0f172a;                /* main text */
+      --muted: #6b7280;              /* muted text */
+      --primary: #0f766e;            /* brand */
+      --primary-ink: #ffffff;        /* on-primary */
+      --ring: 0 170 160;             /* ring color (rgb) */
+      --border: #e5e7eb;             /* borders */
+      --radius: 18px;                 /* rounded radius */
+      --shadow: 0 10px 30px rgba(15, 23, 42, .07);
+    }
+    @media (prefers-color-scheme: dark){
+      :root{
+        --bg: #090a0c;
+        --surface: #0f1216;
+        --surface-2: #0d1014;
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+        --primary: #22c55e;
+        --primary-ink: #051006;
+        --border: #1f2937;
+        --shadow: 0 10px 30px rgba(0,0,0,.35);
+      }
+    }
+
+    /* —— Page layout —— */
+    html,body{height:100%}
+    body{
+      margin:0;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      font-family: 'Noto Nastaliq Urdu','Noto Sans Arabic', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1200px 600px at 50% -20%, rgba(34,197,94,.08), transparent 70%),
+        linear-gradient(to bottom, var(--surface-2), #eef2f7 35%, #f9fafb 100%);
+      background-color: var(--surface-2);
+      padding: 0;
+    }
+
+    /* Top bar */
+    .topbar{
+      position: sticky; top:0; z-index: 10;
+      backdrop-filter: blur(10px);
+      background: color-mix(in oklab, var(--surface), transparent 20%);
+      border-bottom: 1px solid color-mix(in oklab, var(--border), transparent 30%);
+    }
+    .topbar-inner{
+      max-width: 1200px; margin: 0 auto; padding: 14px 18px;
+      display:flex; align-items:center; justify-content:space-between; gap:16px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px; font-weight:700;
+      font-size: 20px;
+    }
+    .brand-badge{
+      width:40px; height:40px; display:grid; place-items:center;
+      background: color-mix(in oklab, var(--primary), transparent 85%);
+      border-radius: 14px; box-shadow: var(--shadow);
+      font-size: 18px;
+    }
+
+    /* Container & hero */
+    .container{
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 18px 36px;
+    }
+    .hero{
+      display: grid; gap: 24px; align-items: center;
+      grid-template-columns: 1fr; margin-top: 18px;
+    }
+    @media (min-width: 992px){
+      .hero{ grid-template-columns: 1.2fr 1fr; }
+    }
+    .hero-media{
+      background: linear-gradient(135deg, color-mix(in oklab, var(--primary), transparent 85%), color-mix(in oklab, var(--primary), transparent 92%));
+      border: 1px solid var(--border);
+      border-radius: calc(var(--radius) + 6px);
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+    .media-box{
+      aspect-ratio: 16/9;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #eaeef3, #f7fafc);
+      border: 1px dashed color-mix(in oklab, var(--border), transparent 30%);
+      display:grid; place-items:center; color: var(--muted);
+      font-size: 14px;
+    }
+    .hero-copy h1{
+      font-size: clamp(28px, 4vw, 44px);
+      line-height: 1.55; margin: 0 0 10px;
+      font-weight: 700;
+    }
+    .hero-copy p{ color: var(--muted); margin: 0 0 14px; font-size: 16px; }
+    .btn{
+      display:inline-flex; align-items:center; gap:.5rem;
+      border-radius: 14px; padding: 10px 14px;
+      border: 1px solid var(--border); background: var(--surface);
+      text-decoration:none; color: var(--text); font-size: 14px; cursor:pointer;
+      transition: transform .06s ease, background .2s ease, border-color .2s ease;
+    }
+    .btn:hover{ transform: translateY(-1px); }
+    .btn-primary{
+      background: var(--primary); color: var(--primary-ink); border-color: color-mix(in oklab, var(--primary), black 8%);
+    }
+    .btn-outline{
+      background: transparent; color: var(--text);
+    }
+
+    /* Search card */
+    .search-card{
+      margin-top: 16px; padding: 16px; border-radius: var(--radius);
+      background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow);
+    }
+    .search-row{ display:flex; gap:10px; align-items:center; }
+    .search-row input[type="text"]{
+      flex:1; font-size: 16px; padding: 12px 14px;
+      border: 1px solid var(--border); border-radius: 12px; outline: none;
+      background: var(--surface-2); color: var(--text);
+      transition: box-shadow .2s ease, border-color .2s ease;
+    }
+    .search-row input[type="text"]:focus{
+      border-color: rgb(var(--ring));
+      box-shadow: 0 0 0 4px rgba(var(--ring), .12);
+    }
+    .search-row input[type="submit"]{
+      all: unset; /* keep form functionality, just re-style */
+      padding: 12px 16px; border-radius: 12px; cursor:pointer;
+      background: var(--primary); color: var(--primary-ink);
+      border: 1px solid color-mix(in oklab, var(--primary), black 10%);
+      font-size: 14px;
+    }
+
+    /* List header */
+    .list-head{
+      display:flex; align-items:center; justify-content:space-between;
+      margin: 22px 4px 10px;
+    }
+    .list-head h2{ margin:0; font-size: clamp(22px, 3vw, 30px); font-weight:700; }
+    .muted-link{ color: var(--muted); text-decoration:none; padding:8px 10px; border-radius:12px; }
+    .muted-link:hover{ background: var(--surface); border:1px solid var(--border); }
+
+    /* Sermon cards */
+    .sermon-item{
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px;
+      margin-bottom: 16px;
+      background: var(--surface);
+      box-shadow: var(--shadow);
+      transition: transform .12s ease, box-shadow .12s ease, border-color .2s ease;
+    }
+    .sermon-item:hover{ transform: translateY(-2px); }
+    .sermon-title{
+      display:inline-block;
+      color: var(--text);
+      font-size: 20px;
+      line-height: 1.65;
+      text-decoration: none;
+      margin-bottom: 6px;
+    }
+    .sermon-title:hover{
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      text-decoration-thickness: 1.25px;
+    }
+    .sermon-meta{
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 10px;
+      display:flex; flex-wrap:wrap; gap:6px 12px;
+    }
+    .sermon-meta strong{ color: inherit; font-weight: 600; }
+    .sermon-excerpt{
+      color: color-mix(in oklab, var(--text), #000 10%);
+      line-height: 1.9;
+      font-size: 15px;
+    }
+
+    /* Pagination */
+    .pagination{
+      text-align:center; margin-top: 26px;
+      display:flex; justify-content:center; gap:8px; flex-wrap:wrap;
+    }
+    .pagination a, .pagination span{
+      display:inline-block; min-width: 40px; text-align:center;
+      padding: 10px 14px; border-radius: 999px; text-decoration:none;
+      border: 1px solid var(--border); color: var(--text); background: var(--surface);
+      font-size: 14px;
+      transition: background .2s ease, transform .06s ease;
+    }
+    .pagination a:hover{ transform: translateY(-1px); background: var(--surface-2); }
+    .pagination .current{
+      background: var(--primary); color: var(--primary-ink);
+      border-color: color-mix(in oklab, var(--primary), black 10%);
+    }
+
+    /* Empty state */
+    .no-sermons{
+      text-align:center; color: var(--muted);
+      background: var(--surface); border: 1px dashed var(--border);
+      border-radius: var(--radius); padding: 32px; margin-top: 18px;
+    }
+
+    /* Small helpers */
+    .lead{ color: var(--muted); margin: 0 0 8px; }
+    .spacer{ height: 6px; }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Spurgeon Sermons - اردو</h1>
-        
-        <div class="search-box">
-            <form method="get" action="{% url 'sermons:sermon_search' %}">
-                <input type="text" name="q" placeholder="Search sermons..." value="{{ request.GET.q }}">
-                <input type="submit" value="Search">
-            </form>
-        </div>
 
-        {% if sermons %}
-            {% for sermon in sermons %}
-                <div class="sermon-item">
-                    <a href="{% url 'sermons:sermon_detail' sermon.pk %}" class="sermon-title">
-                        {{ sermon.title_urdu }} - {{ sermon.title_english }}
-                    </a>
-                    <div class="sermon-meta">
-                        <strong>Bible Passage:</strong> {{ sermon.bible_passage_urdu }} - {{ sermon.bible_passage_english }} | 
-                        <strong>Sermon Number:</strong> {{ sermon.spurgeon_gems_number }} | 
-                        {% if sermon.summary_urdu %}
-                            <strong>Summary:</strong> {{ sermon.summary_urdu }}
-                        {% endif %}
-                    </div>
-                    <div class="sermon-excerpt">
-                        {{ sermon.content|truncatewords:50 }}
-                    </div>
-                </div>
-            {% endfor %}
-
-            {% if is_paginated %}
-                <div class="pagination">
-                    {% if page_obj.has_previous %}
-                        <a href="?page=1">&laquo; First</a>
-                        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
-                    {% endif %}
-
-                    <span class="current">
-                        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-                    </span>
-
-                    {% if page_obj.has_next %}
-                        <a href="?page={{ page_obj.next_page_number }}">Next</a>
-                        <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
-                    {% endif %}
-                </div>
-            {% endif %}
-        {% else %}
-            <div class="no-sermons">
-                <h3>No sermons found</h3>
-                <p>There are currently no sermons available. Please check back later.</p>
-            </div>
-        {% endif %}
+  <!-- Top bar (visual only; no new functionality added) -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="brand-badge"><img src="{% static 'logo.png' %}" alt="Logo" style="width:100%; height:100%; object-fit: contain; border-radius: 12px;" /></span>
+        <span>Spurgeon Sermons — اردو</span>
+      </div>
+      <a class="muted-link" href="#sermons-list">سب دیکھیں</a>
     </div>
+  </div>
+
+  <div class="container">
+
+    <!-- Hero: reuses your page title & makes it feel like the design -->
+    <section class="hero">
+      <div class="hero-media">
+        <div class="media-box">یہاں نمایاں خطبہ/پلیئر رکھ سکتے ہیں (اختیاری)</div>
+        <div class="spacer"></div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap">
+          <a class="btn btn-primary" href="#sermons-list">ابھی سنیں</a>
+          <a class="btn btn-outline" href="#search">آف لائن محفوظ کریں</a>
+        </div>
+      </div>
+      <div class="hero-copy">
+        <h1>علم و حکمت کے روشن خطبات</h1>
+        <p class="lead">مستند مواعظ — آسان تلاش، صاف ترتیب، خوبصورت اردو پیشکش۔</p>
+
+        <!-- Your search form (unchanged action/inputs) wrapped as a stylish card -->
+        <div class="search-card" id="search">
+          <div class="search-row">
+            <form method="get" action="{% url 'sermons:sermon_search' %}" style="display:flex; gap:10px; width:100%;">
+              <input type="text" name="q" placeholder="خطبہ تلاش کریں…" value="{{ request.GET.q }}">
+              <input type="submit" value="تلاش">
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- List header -->
+    <div class="list-head" id="sermons-list">
+      <h2>حالیہ خطبات</h2>
+      <a class="muted-link" href="#search">مزید تلاش کریں</a>
+    </div>
+
+    {% if sermons %}
+      {% for sermon in sermons %}
+        <div class="sermon-item">
+          <a href="{% url 'sermons:sermon_detail' sermon.pk %}" class="sermon-title">
+            {{ sermon.title_urdu }} — {{ sermon.title_english }}
+          </a>
+
+          <div class="sermon-meta">
+            <span><strong>آیت/حوالہ:</strong> {{ sermon.bible_passage_urdu }} — {{ sermon.bible_passage_english }}</span>
+            <span><strong>سیرمن نمبر:</strong> {{ sermon.spurgeon_gems_number }}</span>
+            {% if sermon.summary_urdu %}
+              <span><strong>خلاصہ:</strong> {{ sermon.summary_urdu }}</span>
+            {% endif %}
+          </div>
+
+          <div class="sermon-excerpt">
+            {{ sermon.content|truncatewords:50 }}
+          </div>
+        </div>
+      {% endfor %}
+
+      {% if is_paginated %}
+        <div class="pagination">
+          {% if page_obj.has_previous %}
+            <a href="?page=1">اوّل</a>
+            <a href="?page={{ page_obj.previous_page_number }}">پچھلا</a>
+          {% endif %}
+
+          <span class="current">
+            صفحہ {{ page_obj.number }} از {{ page_obj.paginator.num_pages }}
+          </span>
+
+          {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">اگلا</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">آخر</a>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% else %}
+      <div class="no-sermons">
+        <h3>کوئی خطبہ نہیں ملا</h3>
+        <p>اس وقت خطبات دستیاب نہیں۔ براہِ کرم کچھ دیر بعد دوبارہ کوشش کریں۔</p>
+      </div>
+    {% endif %}
+
+  </div>
 </body>
 </html>

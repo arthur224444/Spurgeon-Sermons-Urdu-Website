@@ -1,154 +1,253 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ur" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ sermon.title_urdu }} - مسیحی خطبات</title> <!--- Urdu says Christian sermons -->
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            background-color: #f5f5f5;
-        }
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            background: white;
-            padding: 40px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-        .back-link {
-            margin-bottom: 20px;
-        }
-        .back-link a {
-            color: #3498db;
-            text-decoration: none;
-            font-weight: bold;
-        }
-        .back-link a:hover {
-            text-decoration: underline;
-        }
-        h1 {
-            color: #2c3e50;
-            margin-bottom: 20px;
-            border-bottom: 3px solid #3498db;
-            padding-bottom: 15px;
-        }
-        .sermon-meta {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            margin-bottom: 30px;
-            border-left: 4px solid #3498db;
-        }
-        .meta-item {
-            margin-bottom: 10px;
-        }
-        .meta-label {
-            font-weight: bold;
-            color: #2c3e50;
-            display: inline-block;
-            width: 120px;
-        }
-        .meta-value {
-            color: #34495e;
-        }
-        .sermon-content {
-            line-height: 1.8;
-            color: #2c3e50;
-            font-size: 1.1em;
-        }
-        .sermon-content p {
-            margin-bottom: 20px;
-        }
-        .scripture-highlight {
-            background: #fff3cd;
-            border: 1px solid #ffeaa7;
-            border-radius: 5px;
-            padding: 15px;
-            margin: 20px 0;
-            font-style: italic;
-        }
-        .navigation {
-            margin-top: 40px;
-            padding-top: 20px;
-            border-top: 1px solid #e0e0e0;
-            text-align: center;
-        }
-        .nav-button {
-            display: inline-block;
-            padding: 12px 25px;
-            margin: 0 10px;
-            background-color: #3498db;
-            color: white;
-            text-decoration: none;
-            border-radius: 25px;
-            transition: background-color 0.2s;
-        }
-        .nav-button:hover {
-            background-color: #2980b9;
-        }
-        .nav-button.secondary {
-            background-color: #95a5a6;
-        }
-        .nav-button.secondary:hover {
-            background-color: #7f8c8d;
-        }
-    </style>
+  {% load static %}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ sermon.title_urdu }} - مسیحی خطبات</title>
+  <link rel="icon" href="{% static 'logo.png' %}">
+  <link rel="apple-touch-icon" href="{% static 'logo.png' %}">
+  <meta property="og:image" content="{% static 'logo.png' %}">
+  <meta name="twitter:image" content="{% static 'logo.png' %}">
+
+  <!-- Urdu-friendly fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Noto+Sans+Arabic:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* —— Theme tokens —— */
+    :root{
+      --bg: #0b0c0f;
+      --surface: #ffffff;
+      --surface-2: #f6f7f9;
+      --text: #0f172a;
+      --muted: #6b7280;
+      --primary: #0f766e;
+      --primary-ink: #ffffff;
+      --border: #e5e7eb;
+      --ring-rgb: 15,118,110;
+      --radius: 18px;
+      --shadow: 0 10px 30px rgba(15, 23, 42, .07);
+    }
+    @media (prefers-color-scheme: dark){
+      :root{
+        --surface: #0f1216;
+        --surface-2: #0d1014;
+        --text: #e5e7eb;
+        --muted: #9ca3af;
+        --primary: #22c55e;
+        --primary-ink: #051006;
+        --border: #1f2937;
+        --shadow: 0 10px 30px rgba(0,0,0,.35);
+      }
+    }
+
+    html, body { height: 100%; }
+    body{
+      margin: 0;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      font-family: 'Noto Nastaliq Urdu','Noto Sans Arabic', system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(1100px 520px at 50% -20%, rgba(34,197,94,.08), transparent 70%),
+        linear-gradient(to bottom, var(--surface-2), #eef2f7 35%, #f9fafb 100%);
+      background-color: var(--surface-2);
+      padding: 0 0 40px;
+    }
+
+    /* Top bar with back link (same links, just prettier) */
+    .topbar{
+      position: sticky; top:0; z-index:10;
+      backdrop-filter: blur(10px);
+      background: color-mix(in oklab, var(--surface), transparent 18%);
+      border-bottom: 1px solid color-mix(in oklab, var(--border), transparent 30%);
+    }
+    .topbar-inner{
+      max-width: 950px; margin: 0 auto; padding: 12px 16px;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px; font-weight:700; font-size:18px;
+    }
+    .brand-badge{
+      width:36px; height:36px; display:grid; place-items:center;
+      background: color-mix(in oklab, var(--primary), transparent 85%);
+      border-radius: 12px; box-shadow: var(--shadow);
+    }
+    .back-link a{
+      display:inline-flex; align-items:center; gap:.5rem;
+      text-decoration:none; color: var(--text);
+      padding:8px 12px; border:1px solid var(--border); border-radius: 999px;
+      background: var(--surface); transition: transform .06s ease, background .2s ease;
+      font-size: 14px;
+    }
+    .back-link a:hover{ transform: translateY(-1px); background: var(--surface-2); }
+
+    /* Page container */
+    .container{
+      max-width: 900px;
+      margin: 18px auto 0;
+      background: var(--surface);
+      padding: 28px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+    }
+
+    /* Title */
+    h1{
+      margin: 0 0 14px;
+      font-size: clamp(24px, 4vw, 36px);
+      line-height: 1.55;
+      font-weight: 700;
+    }
+    .subtitle{
+      color: var(--muted);
+      margin-bottom: 18px;
+      font-size: 15px;
+    }
+
+    /* Meta card */
+    .sermon-meta{
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      margin-bottom: 22px;
+    }
+    .meta-grid{
+      display:grid; gap:10px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width:680px){
+      .meta-grid{ grid-template-columns: 1fr 1fr; }
+    }
+    .meta-item{
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      display:flex; align-items:center; gap:8px;
+      font-size: 14px; color: var(--text);
+    }
+    .meta-label{
+      font-weight: 700; color: color-mix(in oklab, var(--text), #000 10%);
+      min-width: 96px;
+    }
+    .meta-value{ color: var(--text); }
+
+    /* Content typography */
+    .sermon-content{
+      line-height: 2; font-size: 17px; color: color-mix(in oklab, var(--text), #000 6%);
+    }
+    .sermon-content p{ margin: 0 0 16px; }
+    .sermon-content h2, .sermon-content h3{
+      margin: 18px 0 8px; line-height:1.6;
+    }
+    .sermon-content blockquote{
+      margin: 16px 0; padding: 14px 16px;
+      border-inline-start: 4px solid var(--primary);
+      background: color-mix(in oklab, var(--primary), transparent 92%);
+      border-radius: 12px;
+      color: color-mix(in oklab, var(--text), #000 10%);
+      font-style: italic;
+    }
+    /* keeps your optional scripture highlight class looking nice */
+    .scripture-highlight{
+      background: color-mix(in oklab, #fff3cd, var(--surface) 20%);
+      border: 1px solid #ffeaa7;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin: 18px 0;
+      font-style: italic;
+      color: color-mix(in oklab, var(--text), #000 8%);
+    }
+
+    /* Navigation buttons (same links) */
+    .navigation{
+      margin-top: 28px; padding-top: 16px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+      display:flex; justify-content:center; gap:10px; flex-wrap:wrap;
+    }
+    .nav-button{
+      display:inline-block; text-decoration:none; cursor:pointer;
+      padding: 12px 18px; border-radius: 999px;
+      border: 1px solid var(--border); background: var(--surface);
+      color: var(--text); font-size: 14px;
+      transition: transform .06s ease, background .2s ease;
+    }
+    .nav-button:hover{ transform: translateY(-1px); background: var(--surface-2); }
+    .nav-button.secondary{ background: var(--primary); color: var(--primary-ink);
+      border-color: color-mix(in oklab, var(--primary), black 10%); }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="back-link">
-            {% if from_search and search_query %}
-                <a href="{% url 'sermons:sermon_search' %}?q={{ search_query|urlencode }}">&larr; Back to Search Results</a>
-            {% else %}
-                <a href="{% url 'sermons:sermon_list' %}">&larr; Back to Sermon List</a>
-            {% endif %}
-        </div>
 
-        <h1>{{ sermon.title_urdu }} - {{ sermon.title_english }}</h1>
-
-        <div class="sermon-meta">
-            <div class="meta-item">
-                <span class="meta-label">Preacher:</span>
-                <span class="meta-value">{{ sermon.preacher_name_urdu }}</span>
-            </div>
-            <div class="meta-item">
-                <span class="meta-label">Date Preached:</span>
-                <span class="meta-value">{{ sermon.date_preached|date:"F j, Y" }}</span>
-            </div>
-            {% if sermon.bible_passage_english %}
-            <div class="meta-item">
-                <span class="meta-label">Scripture:</span>
-                <span class="meta-value">{{ sermon.bible_passage_urdu }} - {{ sermon.bible_passage_english }}</span>
-            </div>
-            {% endif %}
-            {% if sermon.sermon_number %}
-            <div class="meta-item">
-                <span class="meta-label">Sermon #:</span>
-                <span class="meta-value">{{ sermon.sermon_number }}</span>
-            </div>
-            {% endif %}
-        </div>
-
-        <div class="sermon-content">
-            {{ sermon.content|linebreaks }}
-        </div>
-
-        <div class="navigation">
-            {% if from_search and search_query %}
-                <a href="{% url 'sermons:sermon_search' %}?q={{ search_query|urlencode }}" class="nav-button secondary">Back to Search Results</a>
-                <a href="{% url 'sermons:sermon_list' %}" class="nav-button">All Sermons</a>
-            {% else %}
-                <a href="{% url 'sermons:sermon_list' %}" class="nav-button secondary">All Sermons</a>
-                <a href="{% url 'sermons:sermon_search' %}" class="nav-button">Search Sermons</a>
-            {% endif %}
-        </div>
+  <!-- Sticky top bar (purely cosmetic) -->
+  <div class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <span class="brand-badge"><img src="{% static 'logo.png' %}" alt="Logo" style="width:100%; height:100%; object-fit: contain; border-radius: 10px;" /></span>
+        <span>مسیحی خطبات</span>
+      </div>
+      <div class="back-link">
+        {% if from_search and search_query %}
+          <a href="{% url 'sermons:sermon_search' %}?q={{ search_query|urlencode }}">← تلاش کے نتائج کی طرف</a>
+        {% else %}
+          <a href="{% url 'sermons:sermon_list' %}">← خطبات کی فہرست</a>
+        {% endif %}
+      </div>
     </div>
+  </div>
+
+  <div class="container">
+    <h1>{{ sermon.title_urdu }} — {{ sermon.title_english }}</h1>
+    <div class="subtitle"></div>
+
+    <!-- META (same data, styled as chips) -->
+    <div class="sermon-meta">
+      <div class="meta-grid">
+        <div class="meta-item">
+          <span class="meta-label">واعظ:</span>
+          <span class="meta-value">{{ sermon.preacher_name_urdu }}</span>
+        </div>
+        <div class="meta-item">
+          <span class="meta-label">تاریخِ خطبہ:</span>
+          <span class="meta-value">{{ sermon.date_preached|date:"F j, Y" }}</span>
+        </div>
+        {% if sermon.bible_passage_english %}
+        <div class="meta-item" style="grid-column: 1 / -1;">
+          <span class="meta-label">مقدس نوشتہ:</span>
+          <span class="meta-value">{{ sermon.bible_passage_urdu }} — {{ sermon.bible_passage_english }}</span>
+        </div>
+        {% endif %}
+        {% if sermon.sermon_number %}
+        <div class="meta-item">
+          <span class="meta-label">سیرمن #:</span>
+          <span class="meta-value">{{ sermon.sermon_number }}</span>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- CONTENT (unchanged functionality) -->
+    <div class="sermon-content">
+      {{ sermon.content|linebreaks }}
+    </div>
+
+    <!-- NAV (same URLs) -->
+    <div class="navigation">
+      {% if from_search and search_query %}
+        <a href="{% url 'sermons:sermon_search' %}?q={{ search_query|urlencode }}" class="nav-button secondary">تلاش کے نتائج</a>
+        <a href="{% url 'sermons:sermon_list' %}" class="nav-button">تمام خطبات</a>
+      {% else %}
+        <a href="{% url 'sermons:sermon_list' %}" class="nav-button secondary">تمام خطبات</a>
+        <a href="{% url 'sermons:sermon_search' %}" class="nav-button">خطبے تلاش کریں</a>
+      {% endif %}
+    </div>
+  </div>
 </body>
 </html>
-
-
