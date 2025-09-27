@@ -9,6 +9,7 @@ from django.views.generic import DetailView, View
 from .data_connection import DataConnection
 from .models import Sermon
 
+data_conn = DataConnection()
 # Create your views here.
 
 
@@ -19,10 +20,6 @@ class SermonListView(View):
     paginate_by = 10
 
     def get(self, request, *args, **kwargs):
-        data_conn = (
-            DataConnection()
-        )  # TODO: Better to make this a module level singleton
-
         q = (request.GET.get("q") or "").strip()
         page_number_raw = request.GET.get("page", 1)
 
@@ -80,7 +77,6 @@ class SermonDetailView(DetailView):
 
     def _fetch_and_create_sermon(self, sermon_id):
         """Fetch sermon from API and create a temporary Sermon object for display"""
-        data_conn = DataConnection()
         sermon_data = data_conn.get_sermon_full_details(sermon_id)
 
         if not sermon_data:
@@ -123,7 +119,6 @@ def sermon_search(request):
     sermons = []
 
     if query:
-        data_conn = DataConnection()
         sermon_numbers = data_conn.search_sermons(query)
 
         for sermon_num in sermon_numbers[:10]:
