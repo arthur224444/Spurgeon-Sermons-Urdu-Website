@@ -4,3 +4,4 @@ uvicorn
 pre-commit
 black
 requests
+docx2pdf
