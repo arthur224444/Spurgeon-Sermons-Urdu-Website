@@ -230,6 +230,16 @@
           <span class="meta-value">{{ sermon.sermon_number }}</span>
         </div>
         {% endif %}
+        {% if pdf_static_paths %}
+        <div class="meta-item" style="grid-column: 1 / -1; justify-content: space-between;">
+          <span class="meta-label">PDF:</span>
+          <span class="meta-value">
+            {% for pdf_path in pdf_static_paths %}
+              <a href="{% static pdf_path %}" target="_blank" rel="noopener" class="nav-button">PDF کھولیں</a>
+            {% endfor %}
+          </span>
+        </div>
+        {% endif %}
       </div>
     </div>
 

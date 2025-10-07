@@ -73,6 +73,24 @@ class SermonDetailView(DetailView):
         # Check if user came from search results
         context["from_search"] = self.request.GET.get("from_search", False)
         context["search_query"] = self.request.GET.get("q", "")
+
+        # Attempt to fetch translation files (e.g., PDFs) from the API
+        sermon_obj = self.object
+        sermon_number = getattr(sermon_obj, "sermon_number", None) or getattr(
+            sermon_obj, "id", None
+        )
+        pdf_static_paths = []
+        if sermon_number:
+            details = data_conn.get_sermon_full_details(sermon_number)
+            if details and isinstance(details, dict):
+                for file_record in details.get("translation_files", []) or []:
+                    file_path = file_record.get("file_path")
+                    if file_path and str(file_path).lower().endswith(".pdf"):
+                        pdf_static_paths.append(
+                            f"sermons/spurgeon/pdf_files/{file_path}"
+                        )
+
+        context["pdf_static_paths"] = pdf_static_paths
         return context
 
     def _fetch_and_create_sermon(self, sermon_id):

@@ -129,6 +129,22 @@ class Database:
             WHERE a.sermon_id = ?
         """
 
+        translation_files_query = """
+            SELECT 
+                tf.id as translation_file_id,
+                tf.translation_id,
+                tf.text_file_format_id,
+                tf.file_path,
+                tf.checksum,
+                tf.file_size_bytes,
+                l.language_name_english as translation_language_english,
+                l.language_name_urdu as translation_language_urdu
+            FROM TranslationFiles tf
+            JOIN Translations t ON tf.translation_id = t.id
+            JOIN Languages l ON t.language_id = l.id
+            WHERE t.sermon_id = ?
+        """
+
         with self._get_connection() as conn:
             cursor = conn.cursor()
             cursor.execute(sermons_table_query, (spurgeon_gems_number,))
@@ -152,6 +168,11 @@ class Database:
             cursor.execute(audio_table_query, (sermon_id,))
             audio_records = [dict(row) for row in cursor.fetchall()]
             sermon_details["audio_records"] = audio_records
+
+            # Get translation file information (e.g., PDFs)
+            cursor.execute(translation_files_query, (sermon_id,))
+            translation_files = [dict(row) for row in cursor.fetchall()]
+            sermon_details["translation_files"] = translation_files
 
         return sermon_details
 
