@@ -1,7 +1,6 @@
 import logging
 from typing import Dict, List, Optional
 
-import requests
 from django.conf import settings
 
 from database.database import Database
@@ -11,19 +10,7 @@ logger = logging.getLogger(__name__)
 
 class DataConnection:
     def __init__(self, base_url: str = None):
-        self.base_url = "http://localhost:8001"
         self.database = Database()
-
-    def _make_request(self, endpoint: str) -> Optional[Dict]:
-        """Make HTTP request to database API"""
-        try:
-            url = f"{self.base_url}{endpoint}"
-            response = requests.get(url, timeout=10)
-            response.raise_for_status()
-            return response.json()
-        except requests.exceptions.RequestException as e:
-            logger.error(f"API request failed for {endpoint}: {e}")
-            return None
 
     def get_all_sermons_numbers(self) -> List[int]:
         """Get all Spurgeon Gems sermon numbers"""
@@ -66,14 +53,12 @@ class DataConnection:
     def get_sermon_basic_details(self, sermon_number: int) -> Optional[Dict]:
         """Get basic sermon details"""
         return self.database.get_sermon_basic_details(sermon_number)
-        # return self._make_request(f"/sermons/{sermon_number}")
 
     def get_sermon_full_details(self, sermon_number: int) -> Optional[Dict]:
         """Get full sermon details including content"""
         if sermon_number is None:
             return {"error": "Invalid Spurgeon Gems sermon number"}
         return self.database.get_sermon_full_details(sermon_number)
-        # return self._make_request(f"/sermons/{sermon_number}/details")
 
 
 # Example usage
