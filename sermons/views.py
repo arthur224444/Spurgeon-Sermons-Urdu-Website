@@ -6,7 +6,8 @@ from django.shortcuts import render
 from django.utils import timezone
 from django.views.generic import DetailView, View
 
-from .data_connection import DataConnection
+from database.data_connection import DataConnection
+
 from .models import Sermon
 
 data_conn = DataConnection()
