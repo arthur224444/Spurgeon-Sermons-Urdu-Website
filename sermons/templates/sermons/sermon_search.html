@@ -197,7 +197,7 @@
     <div class="topbar-inner">
       <div class="brand">
         <span class="brand-badge"><img src="{% static 'logo.png' %}" alt="Logo" style="width:100%; height:100%; object-fit: contain; border-radius: 10px;" /></span>
-        <span>Spurgeon Sermons — تلاش</span>
+        <span>تلاش</span>
       </div>
       <div class="back-link">
         <a href="{% url 'sermons:sermon_list' %}">← تمام خطبات</a>
@@ -206,7 +206,7 @@
   </div>
 
   <div class="container">
-    <h1>Search Sermons — اردو</h1>
+    <h1>اردو</h1>
     <p class="sublead">عنوان، متن یا حوالہ کے ذریعے تلاش کریں</p>
 
     <div class="search-box">
@@ -229,10 +229,10 @@
           {% for sermon in sermons %}
             <div class="sermon-item">
               <a href="{% url 'sermons:sermon_detail' sermon.pk %}?from_search=1&q={{ query|urlencode }}" class="sermon-title">
-                {{ sermon.title_urdu }} — {{ sermon.title_english }}
+                {{ sermon.title_urdu }}
               </a>
               <div class="sermon-meta">
-                <span><strong>حوالہ:</strong> {{ sermon.bible_passage_urdu }} — {{ sermon.bible_passage_english }}</span>
+                <span><strong>حوالہ:</strong> {{ sermon.bible_passage_urdu }}</span>
                 <span><strong>سیرمن نمبر:</strong> {{ sermon.spurgeon_gems_number }}</span>
                 {% if sermon.summary_urdu %}
                   <span><strong>خلاصہ:</strong> {{ sermon.summary_urdu }}</span>
