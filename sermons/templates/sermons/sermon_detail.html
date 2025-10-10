@@ -222,6 +222,7 @@
         <div class="meta-item" style="grid-column: 1 / -1;">
           <span class="meta-label">مقدس نوشتہ:</span>
           <span class="meta-value">{{ sermon.bible_passage_urdu }} — {{ sermon.bible_passage_english }}</span>
+          <span class="meta-value">{{ sermon.preacher_name_english }}</span>
         </div>
         {% endif %}
         {% if sermon.sermon_number %}
@@ -238,6 +239,12 @@
               <a href="{% static pdf_path %}" target="_blank" rel="noopener" class="nav-button">PDF کھولیں</a>
             {% endfor %}
           </span>
+        </div>
+        {% endif %}
+        {% if sermon.preacher_name_english == "Charles H. Spurgeon" or sermon.preacher_name_english == "Charles Spurgeon" %}
+        <div class="meta-item" style="grid-column: 1 / -1;">
+          <span class="meta-label">اصل ماخذ:</span>
+          <span class="meta-value"><a href="https://www.spurgeongems.org" target="_blank" rel="noopener">SpurgeonGems.org</a></span>
         </div>
         {% endif %}
       </div>
