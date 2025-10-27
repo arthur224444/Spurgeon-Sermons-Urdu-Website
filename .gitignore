@@ -12,3 +12,4 @@ __pycache__/
 *.zip
 *.docx
 docx_files/
+django_site/settings.py
