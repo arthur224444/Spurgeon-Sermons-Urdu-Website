@@ -24,9 +24,9 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 SECRET_KEY = "django-insecure-oc5zel0cdvmm__jo+7_ji*u_=&tr&y0elwo-w4#ztu8h6!$zu)"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["159.89.249.156"]
 
 # Database API Configuration
 DATABASE_API_URL = "http://localhost:8001"  # Adjust port as needed
